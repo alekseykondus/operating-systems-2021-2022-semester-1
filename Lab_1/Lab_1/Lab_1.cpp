@@ -1,19 +1,22 @@
 ﻿//Работа с сокетами
-#pragma comment(lib, "ws2_32.lib")
+/*#pragma comment(lib, "ws2_32.lib")
 //#include <winsock2.h>
 
 
 #include <windows.h>
 #include <string>
 #include <iostream>
-#include <future>
-
-SOCKET Connections[2];
-int Counter = 0;
+#include <future>*/
+#include "Server.h"
 
 #pragma warning(disable: 4996)
 int main(int argc, char* argv[])
 {
+	Server server(10);
+	server.RunServer();
+	
+	
+	/*
 	//Сокеты
 	//WSAStartup
 	

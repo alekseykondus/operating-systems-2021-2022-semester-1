@@ -37,7 +37,11 @@ int main()
 	char strFromServer[256];
 	recv(Connection, strFromServer, sizeof(strFromServer), NULL);
 
-	Sleep(3000);
+	//Sleep(3000);
 	std::cout << strFromServer << " FROM G" << std::endl;
+
+
+	char strToServer[256] = "sms to server from function G";
+	send(Connection, strToServer, sizeof(strToServer), NULL);
 
 }
