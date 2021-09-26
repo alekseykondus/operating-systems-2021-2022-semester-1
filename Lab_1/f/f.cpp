@@ -1,18 +1,28 @@
 ﻿//Работа с сокетами
 #pragma comment(lib, "ws2_32.lib")
 #include <winsock2.h>
-
-
 #include <iostream>
 #include <windows.h>
+//#include <exception>
+
+
+/*
+class memoryAllocationFailed : public std::exception {
+public:
+	const char* what() const noexcept override {
+		return "Exceptional situation: memory allocation failed\n";
+	}
+};*/
+
+double f(double x) {
+	return x * x;
+}
 
 #pragma warning(disable: 4996)
 int main()
 {
-	std::cout << "Hello World form f!!!\n" << std::endl;
-
 	//Сокеты
-//WSAStartup
+	//WSAStartup
 
 	WSAData wsaData;
 	WORD DLLVersion = MAKEWORD(2, 1);
@@ -23,9 +33,9 @@ int main()
 
 	SOCKADDR_IN addr;
 	int sizeOfAddr = sizeof(addr);
+	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = inet_addr("127.0.0.1");
 	addr.sin_port = htons(1111);
-	addr.sin_family = AF_INET;
 
 	SOCKET Connection = socket(AF_INET, SOCK_STREAM, NULL);
 	if (connect(Connection, (SOCKADDR*)&addr, sizeOfAddr) != 0) {
@@ -34,16 +44,23 @@ int main()
 	}
 	std::cout << "Connected is OK!" << std::endl;
 
-	char strFromServer[256];
-	recv(Connection, strFromServer, sizeof(strFromServer), NULL);
+	//Получаем данные с сервера
+	char xFromServer[10];
+	recv(Connection, xFromServer, sizeof(xFromServer), NULL);
 
 	//Sleep(5000);
-	std::cout << strFromServer << " FROM F" << std::endl;
+	std::cout << xFromServer << " FROM F" << std::endl;
 
-	//возращаем что-то!
+	//Считаем результат
+	double return_F = f(atof(xFromServer));
 
-	char strToServer[256] = "sms from function F";
+	//Отправляем результат на сервер
+	char strToServer[10];
+	sprintf(strToServer, "%f", return_F);
 	send(Connection, strToServer, sizeof(strToServer), NULL);
 
+	//throw memoryAllocationFailed();
+	closesocket(Connection);
+	WSACleanup();
 	return 0;
 }

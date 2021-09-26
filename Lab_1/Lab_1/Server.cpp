@@ -20,10 +20,10 @@ void Server::RunServer()
 	}
 
 	SOCKADDR_IN addr;
+	addr.sin_family = AF_INET;
 	int sizeOfAddr = sizeof(addr);
 	addr.sin_addr.s_addr = inet_addr("127.0.0.1");
 	addr.sin_port = htons(1111);
-	addr.sin_family = AF_INET;
 
 	m_sListen = socket(AF_INET, SOCK_STREAM, NULL);
 
@@ -40,13 +40,13 @@ void Server::RunServer()
 	}
 
 	RunProcesses();
-	SendingAndReceivingData(addr, sizeOfAddr);
+	SendingData(addr, sizeOfAddr);
 
 
 	CloseServer();
 }
 
-void Server::SendingAndReceivingData(SOCKADDR_IN addr, int sizeOfAddr)
+void Server::SendingData(SOCKADDR_IN addr, int sizeOfAddr)
 {
 	SOCKET newConnectionF;
 	SOCKET newConnectionG;
@@ -54,26 +54,88 @@ void Server::SendingAndReceivingData(SOCKADDR_IN addr, int sizeOfAddr)
 	newConnectionF = accept(m_sListen, (SOCKADDR*)&addr, &sizeOfAddr);
 	newConnectionG = accept(m_sListen, (SOCKADDR*)&addr, &sizeOfAddr);
 
-	if (newConnectionF == 0 || newConnectionG == 0) {
-		std::cout << "Error: The client was unable to connect to the server" << std::endl;
+	if (newConnectionF == SOCKET_ERROR || newConnectionG == SOCKET_ERROR) {
+		closesocket(newConnectionF);
+		closesocket(newConnectionG);
+		printf("Unable to connect to server: %ld\n", WSAGetLastError());
+		WSACleanup();
 	}
 	else {
 		std::cout << "Clients connected" << std::endl;
-		char strToClient[256] = "Hello. It is my first network program!";
-		send(newConnectionF, strToClient, sizeof(strToClient), NULL);
-		send(newConnectionG, strToClient, sizeof(strToClient), NULL);
+		double x = 1.1111111;
+		char xSTR[10];
+		sprintf(xSTR, "%f", x);
+
+		send(newConnectionF, xSTR, sizeof(xSTR), NULL);
+		send(newConnectionG, xSTR, sizeof(xSTR), NULL);
+
 		std::cout << "I SEND" << std::endl << std::endl;
 
-		char strFromF[256];
-		char strFromG[256];
-		recv(newConnectionF, strFromF, sizeof(strFromF), NULL);
-		recv(newConnectionG, strFromG, sizeof(strFromG), NULL);
-		std::cout << strFromF << " FROM F" << std::endl;
-		std::cout << strFromG << " FROM G" << std::endl;
-
+		ReceivingData(newConnectionF, newConnectionG, x);
 	}
-	
+
+}
+
+void Server::ReceivingData(SOCKET &connectionF, SOCKET &connectionG, double x)
+{
 	//Получаем информацию с клиентов!
+	std::future<char*> result_F = std::async(std::launch::async, [&]() {
+		char strFromF[100];
+		int recV = recv(connectionF, strFromF, sizeof(strFromF), NULL);
+		mu.lock();
+		Sleep(10);
+		if (recV > 0)
+			std::cout << "strFromF = " << strFromF << std::endl;
+		else
+			std::cout << "recV = " << recV << std::endl;
+
+		if (recV < 0)
+			std::cout << "Error: = recV < 0" << std::endl;
+		mu.unlock();
+		return strFromF;
+		});
+
+	std::future<char*> result_G = std::async(std::launch::async, [&]() {
+		char strFromG[100];
+		int recV = recv(connectionG, strFromG, sizeof(strFromG), NULL);
+		mu.lock();
+		Sleep(10);
+		if (recV > 0)
+			std::cout << "strFromG = " << strFromG << std::endl;
+		else
+			std::cout << "recV = " << recV << std::endl;
+
+		if (recV < 0)
+			std::cout << "Error: = recV < 0" << std::endl;
+		mu.unlock();
+		return strFromG;
+		});
+
+	//std::future_status f1 = result_F.wait_for(std::chrono::milliseconds(1)); //чтобы испытать timeout
+	std::future_status f1 = result_F.wait_for(std::chrono::seconds(5));
+	std::future_status f2 = result_G.wait_for(std::chrono::seconds(5));
+
+	if (f1 == std::future_status::timeout || f2 == std::future_status::timeout)
+		std::cout << "Eror: timeout" << std::endl;
+
+
+	if (f1 == std::future_status::ready && f2 == std::future_status::ready) {
+		//char* F = result_F.get();
+		double doubleFromF = atof(result_F.get());
+		//char* G = result_G.get();
+		double doubleFromG = atof(result_G.get());
+
+		std::cout << doubleFromF << " FROM F" << std::endl;
+		std::cout << doubleFromG << " FROM G" << std::endl << std::endl;
+
+		std::cout << "After multiplication: " << doubleFromF * doubleFromG << std::endl << std::endl;
+	
+//		std::cout << "x * x = " << x * x << std::endl <<
+//			"x * x * x =" << x * x * x << std::endl;
+	}
+	std::cout << "WSAGetLastError() = " << WSAGetLastError() << std::endl << std::endl << std::endl;
+	closesocket(connectionF);
+	closesocket(connectionG);
 }
 
 void Server::CloseServer()
@@ -91,12 +153,12 @@ void Server::RunProcesses()
 	si.cb = sizeof(si);
 	ZeroMemory(&pi, sizeof(pi));
 
-
 	std::wstring czCommandLineF = L"C:\\Users\\Professional\\source\\repos\\Lab_1\\Debug\\f.exe";
 	std::wstring czCommandLineG = L"C:\\Users\\Professional\\source\\repos\\Lab_1\\Debug\\g.exe";
 
-	std::future<void> result_F = std::async(std::launch::async, [&]() { CreateProcess(czCommandLineF.c_str(), NULL, NULL, NULL, FALSE, NULL, NULL, NULL, &si, &pi); });
-	std::future<void> result_G = std::async(std::launch::async, [&]() { CreateProcess(czCommandLineG.c_str(), NULL, NULL, NULL, FALSE, NULL, NULL, NULL, &si, &pi); });
+	CreateProcess(czCommandLineF.c_str(), NULL, NULL, NULL, FALSE, NULL, NULL, NULL, &si, &pi); 
+	Sleep(10);
+	CreateProcess(czCommandLineG.c_str(), NULL, NULL, NULL, FALSE, NULL, NULL, NULL, &si, &pi);
 }
 
 void Server::CloseProcesses()
