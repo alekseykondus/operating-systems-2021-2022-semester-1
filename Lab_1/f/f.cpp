@@ -4,7 +4,7 @@
 #include <iostream>
 #include <windows.h>
 //#include <exception>
-
+#include "../testing/probefuncs.hpp"
 
 /*
 class memoryAllocationFailed : public std::exception {
@@ -14,7 +14,7 @@ public:
 	}
 };*/
 
-double f(double x) {
+long double f(double x) {
 	return x * x;
 }
 
@@ -39,25 +39,38 @@ int main()
 
 	SOCKET Connection = socket(AF_INET, SOCK_STREAM, NULL);
 	if (connect(Connection, (SOCKADDR*)&addr, sizeOfAddr) != 0) {
-		std::cout << "Error: failed connect to server" << std::endl;
+		std::cout << "Error: failed connect to server (F)" << std::endl;
 		return 1;
 	}
-	std::cout << "Connected is OK!" << std::endl;
+	std::cout << "Connected to F is OK!" << std::endl;
 
 	//Получаем данные с сервера
-	char xFromServer[10];
+	char xFromServer[100];
 	recv(Connection, xFromServer, sizeof(xFromServer), NULL);
 
+	std::variant<os::lab1::compfuncs::hard_fail, os::lab1::compfuncs::soft_fail, int> result = os::lab1::compfuncs::probe_f<os::lab1::compfuncs::INT_SUM>(atof(xFromServer));
+
 	//Sleep(5000);
-	std::cout << xFromServer << " FROM F" << std::endl;
+	//std::cout << xFromServer << " FROM F" << std::endl;
 
 	//Считаем результат
-	double return_F = f(atof(xFromServer));
+	char strToServer[100];
+	if (std::holds_alternative<os::lab1::compfuncs::hard_fail>(result)) {
+		sprintf(strToServer, "%s", "hard fail");
+	//	std::cout << "hard fail" << std::endl;
+	}
+	else if (std::holds_alternative<os::lab1::compfuncs::soft_fail>(result)) {
+		sprintf(strToServer, "%s", "soft fail");
+	//	std::cout << "soft fail" << std::endl;
+	}
+	else {
+		sprintf(strToServer, "%f", (float)std::get<2>(result));
+	//	std::cout << "(float)std::get<2>(result)" << (float)std::get<2>(result) << std::endl;
+	}
 
 	//Отправляем результат на сервер
-	char strToServer[10];
-	sprintf(strToServer, "%f", return_F);
 	send(Connection, strToServer, sizeof(strToServer), NULL);
+
 
 	//throw memoryAllocationFailed();
 	closesocket(Connection);

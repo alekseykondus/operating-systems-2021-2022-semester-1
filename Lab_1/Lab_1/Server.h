@@ -16,11 +16,11 @@
 class Server
 {
 public:
-	Server(int x);
+	Server(double x);
 	~Server();
 	void RunServer();
 	void SendingData(SOCKADDR_IN addr, int sizeOfAddr);
-	void ReceivingData(SOCKET &connectionF, SOCKET &connectionG, double x);
+	void ReceivingData(SOCKET &connectionF, SOCKET &connectionG);
 	void CloseServer();
 
 	void RunProcesses();
@@ -28,7 +28,7 @@ public:
 private:
 	WSAData m_wsaData;
 	SOCKET m_sListen;
-	int m_x;
+	double m_x;
 	STARTUPINFO si;
 	PROCESS_INFORMATION pi;
 
