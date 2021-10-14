@@ -64,6 +64,7 @@ namespace os::lab1::compfuncs {
         INLINE_CONST static case_type cases[] = {
         {.f_attrs = pair(3s, 3.), .g_attrs = pair(1s, 5.) },
         {.f_attrs = {}, .g_attrs = attr_type(3s, {}) },
+//       {.f_attrs = {}, .g_attrs = attr_type(3s, {}) },
         };
     };
 

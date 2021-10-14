@@ -51,7 +51,7 @@ int main()
 		std::cout << "Error: failed connect to server (F)" << std::endl;
 		return 1;
 	}
-	std::cout << "Connected to F is OK!" << std::endl;
+	//std::cout << "Connected to F is OK!" << std::endl;
 
 	//Получаем данные с сервера
 	char xFromServer[100];

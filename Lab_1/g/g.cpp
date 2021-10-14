@@ -42,7 +42,7 @@ int main()
 		std::cout << "Error: failed connect to server (G)" << std::endl;
 		return 1;
 	}
-	std::cout << "Connected to G is OK!" << std::endl;
+	//std::cout << "Connected to G is OK!" << std::endl;
 	
 	//Получаем данные с сервера
 	char xFromServer[100];
