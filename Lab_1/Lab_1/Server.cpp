@@ -5,13 +5,14 @@ Server::Server(double x) : m_x(x) {
 
 Server::~Server()
 {
+	closesocket(m_sListen);
+	WSACleanup();
+	std::cout << "Server was stoped. You can close app." << std::endl << std::endl
+		<< "Program finished: " << (WSAGetLastError() ? "with error: " + WSAGetLastError() : "without errors") << std::endl;
 }
 
 void Server::RunServer()
 {
-	//Сокеты
-	//WSAStartup
-
 	WSAData wsaData;
 	WORD DLLVersion = MAKEWORD(2, 1);
 	if (WSAStartup(DLLVersion, &wsaData) != 0) {
@@ -41,8 +42,6 @@ void Server::RunServer()
 
 	RunProcesses();
 	SendingData(addr, sizeOfAddr);
-
-
 	CloseServer();
 }
 
@@ -72,7 +71,14 @@ void Server::SendingData(SOCKADDR_IN addr, int sizeOfAddr)
 
 		ReceivingData(newConnectionF, newConnectionG);
 	}
+}
 
+void Server::ProtectedConsoleOutput(std::string str, short b) {
+	mu.lock();
+	std::cout << str;
+	for (short i = 0; i < b; i++)
+		std::cout << std::endl;
+	mu.unlock();
 }
 
 void Server::ReceivingData(SOCKET &connectionF, SOCKET &connectionG)
@@ -80,6 +86,7 @@ void Server::ReceivingData(SOCKET &connectionF, SOCKET &connectionG)
 	//Получаем информацию с клиентов!
 	std::future<char*> result_F = std::async(std::launch::async, [&]() {
 		char strFromF[100];
+
 		int recV = recv(connectionF, strFromF, sizeof(strFromF), NULL);
 		Sleep(10);
 /*		mu.lock();
@@ -108,81 +115,137 @@ void Server::ReceivingData(SOCKET &connectionF, SOCKET &connectionG)
 		if (recV < 0)
 			std::cout << "Error: = recV < 0" << std::endl;
 		mu.unlock();
-*/	
+*/
 		return strFromG;
 		});
 
-	//std::future_status f1 = result_F.wait_for(std::chrono::milliseconds(1)); //чтобы испытать timeout
-	std::future_status fWait = result_F.wait_for(std::chrono::seconds(5));
+	std::future<void> resultOfUserInput = std::async(std::launch::async, [&]() {
+		while (result_F.valid() || result_G.valid()) {
+			if (GetAsyncKeyState(27) & 0x0001) {
+//				mu.lock();
+				ProtectedConsoleOutput("Please confirm that computation should be stopped y(es, stop)/n(ot yet): ");
+				
+				char userInput;	
+				bool isThereTime = true;
+
+				std::future<void> userInputFuture = std::async([&]() {
+					
+//					auto begin = std::chrono::steady_clock::now();
+//					auto end = std::chrono::steady_clock::now();
+//					while (end - begin < std::chrono::seconds(5)) {
+					while (isThereTime) {
+						if (GetAsyncKeyState(89) & 0x0001) {
+							userInput = 'y';
+							std::cout << 'y' << std::endl;
+							break;
+						}
+						else if (GetAsyncKeyState(78) & 0x0001) {
+							userInput = 'n';
+							std::cout << 'n' << std::endl;
+							break;
+						}
+//						end = std::chrono::steady_clock::now();
+					}
+					return;
+				});
+
+				std::future_status userInputWait = userInputFuture.wait_for(std::chrono::seconds(5));
+				isThereTime = false;
+				if (userInputWait == std::future_status::ready) {
+					if (userInput == 'y') {
+						ProtectedConsoleOutput("Overridden by system", 2);
+						TerminateProcess(pi_1.hProcess, 0);
+						TerminateProcess(pi_2.hProcess, 0);
+					}
+					else if (userInput == 'n') {
+						ProtectedConsoleOutput("Proceeding...", 2);
+						//do nothing, continue to count 
+					}
+					else {
+						ProtectedConsoleOutput("You entered the uncorrect value! The calculations continue ... ", 2);
+					}
+				}
+				else if (userInputWait == std::future_status::timeout){
+					ProtectedConsoleOutput("Action is not confirmed within 5 second.Proceeding...", 2);
+				}
+//				mu.unlock();
+			}
+		}
+		return;
+	});
+
+	std::future_status fWait = result_F.wait_for(std::chrono::seconds(10));
+	closesocket(connectionF);
+	std::future_status gWait = result_G.wait_for(std::chrono::seconds(10));
+	closesocket(connectionG);
+
+
+	bool FisValid = result_F.valid();
+	bool GisValid = result_G.valid();
+	char* F = result_F.get();
+	char* G = result_G.get();
+	resultOfUserInput.wait();
+
+
 	if (fWait == std::future_status::timeout) {
-		std::cout << "Result F: timeout error" << std::endl;
-		closesocket(connectionF);
+		ProtectedConsoleOutput("Result F: timeout error", 1);
+	}
+	if (gWait == std::future_status::timeout) {
+		ProtectedConsoleOutput("Result G: timeout error", 1);
 	}
 
-	std::future_status gWait = result_G.wait_for(std::chrono::seconds(5));
-	if (gWait == std::future_status::timeout) {
-		std::cout << "Result G: timeout error" << std::endl;
-		closesocket(connectionG);
-	}
 //	if (WSAGetLastError() == 1460)
 //		std::cout << "ERROR: timeout" << std::endl;
-
-	else if (fWait == std::future_status::ready || gWait == std::future_status::ready) {
+	if (fWait == std::future_status::ready || gWait == std::future_status::ready) {
 		
-		bool FisValid = result_F.valid();
-		bool GisValid = result_G.valid();
-		char* F = result_F.get();
-		char* G = result_G.get();
-
 		if (FisValid && (!(strcmp(F, "hard fail")) || !(strcmp(F, "soft fail"))))
-			std::cout <<  "Result F: " << F << std::endl;
+			ProtectedConsoleOutput(std::string("Result F :") + F, 1);
 		else if (fWait == std::future_status::ready) {
-			std::cout << "Result F: " << atof(F) << std::endl;
+			ProtectedConsoleOutput(std::string("Result F :") + F, 1);
 			FisValid = false;
 		}
 
 		if (GisValid && (!(strcmp(G, "hard fail")) || !(strcmp(G, "soft fail"))))
-			std::cout << "Result G: " << G << std::endl;
+			ProtectedConsoleOutput(std::string("Result G :") + G, 1);
 		else if (gWait == std::future_status::ready) {
-			std::cout << "Result G: " << atof(G) << std::endl << std::endl;
+			ProtectedConsoleOutput(std::string("Result G :") + G, 1);
 			GisValid = false;
 		}
 
-		if (!FisValid && !GisValid) {
-			//std::cout << "After multiplication: " << atof(F) * atof(G) << std::endl << std::endl;
-			std::cout << "After summation: " << atof(F) + atof(G) << std::endl << std::endl;
-		}
+		if (!FisValid && !GisValid)
+			ProtectedConsoleOutput(std::string("After summation: ") + std::to_string(atof(F) + atof(G)), 2);
 	}
-	closesocket(connectionF);
-	closesocket(connectionG);
+//	closesocket(connectionF);
+//	closesocket(connectionG);
 }
 
 void Server::CloseServer()
 {
 	CloseProcesses();
-	closesocket(m_sListen);
-	WSACleanup();
-	std::cout << "Server was stoped. You can close app." << std::endl << std::endl
-		      << "Program finished: " << (WSAGetLastError() ? "with error: " + WSAGetLastError() : "without errors") << std::endl;
 }
 
 void Server::RunProcesses()
 {
 	//запуск процесов!
-	ZeroMemory(&si, sizeof(si));
-	si.cb = sizeof(si);
-	ZeroMemory(&pi, sizeof(pi));
+	ZeroMemory(&si_1, sizeof(si_1));
+	ZeroMemory(&si_2, sizeof(si_2));
+	si_1.cb = sizeof(si_1);
+	si_2.cb = sizeof(si_2);
+	ZeroMemory(&pi_1, sizeof(pi_1));
+	ZeroMemory(&pi_2, sizeof(pi_2));
 
 	std::wstring czCommandLineF = L"C:\\Users\\Professional\\source\\repos\\Lab_1\\Debug\\f.exe";
 	std::wstring czCommandLineG = L"C:\\Users\\Professional\\source\\repos\\Lab_1\\Debug\\g.exe";
 
-	CreateProcess(czCommandLineF.c_str(), NULL, NULL, NULL, FALSE, NULL, NULL, NULL, &si, &pi); 
+	CreateProcess(czCommandLineF.c_str(), NULL, NULL, NULL, FALSE, NULL, NULL, NULL, &si_1, &pi_1); 
 	Sleep(10);
-	CreateProcess(czCommandLineG.c_str(), NULL, NULL, NULL, FALSE, NULL, NULL, NULL, &si, &pi);
+	CreateProcess(czCommandLineG.c_str(), NULL, NULL, NULL, FALSE, NULL, NULL, NULL, &si_2, &pi_2);
 }
 
 void Server::CloseProcesses()
 {
-	CloseHandle(pi.hProcess);
-	CloseHandle(pi.hThread);
+	CloseHandle(pi_1.hProcess);
+	CloseHandle(pi_2.hProcess);
+	CloseHandle(pi_1.hThread);
+	CloseHandle(pi_2.hThread);
 }

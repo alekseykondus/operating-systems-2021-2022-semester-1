@@ -14,8 +14,17 @@ public:
 	}
 };*/
 
+#include <sstream>
+
 long double f(double x) {
 	return x * x;
+}
+
+std::string LDToStr(long double one)
+{
+	std::stringstream ss;
+	ss << one;
+	return ss.str();
 }
 
 #pragma warning(disable: 4996)
@@ -48,7 +57,7 @@ int main()
 	char xFromServer[100];
 	recv(Connection, xFromServer, sizeof(xFromServer), NULL);
 
-	std::variant<os::lab1::compfuncs::hard_fail, os::lab1::compfuncs::soft_fail, int> result = os::lab1::compfuncs::probe_f<os::lab1::compfuncs::INT_SUM>(atof(xFromServer));
+	std::variant<os::lab1::compfuncs::hard_fail, os::lab1::compfuncs::soft_fail, double> result = os::lab1::compfuncs::probe_f < os::lab1::compfuncs::DOUBLE_SUM > (atof(xFromServer));
 
 	//Sleep(5000);
 	//std::cout << xFromServer << " FROM F" << std::endl;
@@ -64,11 +73,11 @@ int main()
 	//	std::cout << "soft fail" << std::endl;
 	}
 	else {
-		sprintf(strToServer, "%f", (float)std::get<2>(result));
-	//	std::cout << "(float)std::get<2>(result)" << (float)std::get<2>(result) << std::endl;
+		strcpy(strToServer, LDToStr((long double)std::get<2>(result)).c_str());
 	}
 
 	//Отправляем результат на сервер
+	//std::cout << "Sent to the server from F: " << strToServer << std::endl;
 	send(Connection, strToServer, sizeof(strToServer), NULL);
 
 

@@ -25,12 +25,17 @@ public:
 
 	void RunProcesses();
 	void CloseProcesses();
+
+	void ProtectedConsoleOutput(std::string str, short b = 0);
+
 private:
 	WSAData m_wsaData;
 	SOCKET m_sListen;
 	double m_x;
-	STARTUPINFO si;
-	PROCESS_INFORMATION pi;
+	STARTUPINFO si_1;
+	STARTUPINFO si_2;
+	PROCESS_INFORMATION pi_1;
+	PROCESS_INFORMATION pi_2;
 
 	std::mutex mu;
 };

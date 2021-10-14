@@ -13,9 +13,9 @@
 #pragma warning(disable: 4996)
 int main(int argc, char* argv[])
 {
-	Server server(4);
+	Server server(0.234);
 
-/*	std::variant<os::lab1::compfuncs::hard_fail, os::lab1::compfuncs::soft_fail, int> result = os::lab1::compfuncs::probe_g<os::lab1::compfuncs::INT_SUM>(1);
+/*	std::variant<os::lab1::compfuncs::hard_fail, os::lab1::compfuncs::soft_fail, int> result = os::lab1::compfuncs::probe_g<os::lab1::compfuncs::INT_SUM>(123.234);
 	std::cout << "f(1): " << result << std::endl;
 	std::cout << std::boolalpha << "f(0) hard failed is " << std::holds_alternative<os::lab1::compfuncs::hard_fail>(result) << std::endl;
 	std::cout << std::boolalpha << "f(0) soft failed is " << std::holds_alternative<os::lab1::compfuncs::soft_fail>(result) << std::endl;
