@@ -7,8 +7,6 @@ Server::~Server()
 {
 	closesocket(m_sListen);
 	WSACleanup();
-	std::cout << "Server was stoped. You can close app." << std::endl
-		<< "Program finished: " << (WSAGetLastError() ? "with error: " + WSAGetLastError() : "without errors") << std::endl;
 }
 
 void Server::RunServer()
@@ -42,7 +40,6 @@ void Server::RunServer()
 
 	RunProcesses();
 	SendingData(addr, sizeOfAddr);
-	CloseServer();
 }
 
 void Server::SendingData(SOCKADDR_IN addr, int sizeOfAddr)
@@ -292,6 +289,7 @@ void Server::ReceivingData(SOCKET &connectionF, SOCKET &connectionG, SOCKADDR_IN
 void Server::CloseServer()
 {
 	CloseProcesses();
+	std::cout << "Server was stoped " << (WSAGetLastError() ? "with error: " + WSAGetLastError() : "without errors") << std::endl << std::endl;
 }
 
 void Server::RunProcesses()

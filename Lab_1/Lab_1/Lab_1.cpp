@@ -10,10 +10,56 @@
 #include "Server.h"
 #include "../testing/probefuncs.hpp"
 
+
+double get_double(const char* msg) {
+	char answer[256];
+	double x;
+
+	ColoredСonsoleOutput::out_GREEN(msg);
+	fgets(answer, sizeof(answer), stdin);
+
+	while (sscanf(answer, "%lf", &x) != 1) {
+		ColoredСonsoleOutput::out_RED("Incorrect input.");
+		std::cout << " Try again: ";
+		fgets(answer, sizeof(answer), stdin);
+	}
+	std::cout << "x = " << x << std::endl;
+	return x;
+}
+bool AskForCompletion() {
+	char ch[100];
+
+	std::cout << "Do you want to continue? (enter the number - 1 or 0)" << std::endl
+			  << "1 - Yes" << std::endl << "0 - No" << std::endl << "_______" << std::endl;
+
+	while (std::cin >> ch) {
+		if (ch[0] == 48) {
+			std::cin.ignore(256, '\n');
+			return false;
+		}
+		else if (ch[0] == 49) {
+			std::cin.ignore(256, '\n');
+			return true;
+		}
+		else {
+			ColoredСonsoleOutput::out_RED("Incorrect input.");
+			std::cout << " Try again: ";
+		}
+	}
+}
+
 #pragma warning(disable: 4996)
 int main(int argc, char* argv[])
 {
-	Server server(0.234);
+	bool finish = false;
+	while (!finish) {
+		double x = get_double("\nEnter the X value (double): ");
+		Server server(x);
+		server.RunServer();
+		server.CloseServer();
+
+		finish = !AskForCompletion();
+	}
 
 /*	std::variant<os::lab1::compfuncs::hard_fail, os::lab1::compfuncs::soft_fail, int> result = os::lab1::compfuncs::probe_g<os::lab1::compfuncs::INT_SUM>(123.234);
 	std::cout << "f(1): " << result << std::endl;
@@ -21,7 +67,6 @@ int main(int argc, char* argv[])
 	std::cout << std::boolalpha << "f(0) soft failed is " << std::holds_alternative<os::lab1::compfuncs::soft_fail>(result) << std::endl;
 */
 
-	server.RunServer();
 	
 	
 	/*
