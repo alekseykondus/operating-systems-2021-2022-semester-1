@@ -76,6 +76,7 @@ void Server::ProtectedConsoleOutput(std::string str, short b) {
 	mu.unlock();
 }
 
+//implemented advanced version(Initiate cancellation dialog by the special key - ESC)
 std::future<void> Server::DialogByESC(std::future<char*>& result_F, std::future<char*>& result_G)
 {
 	std::future<void> resultOfUserInput = std::async(std::launch::async, [&]() {
@@ -240,13 +241,12 @@ void Server::ReceivingData(SOCKET &connectionF, SOCKET &connectionG, SOCKADDR_IN
 		ProtectedConsoleOutput("Result G: timeout error", 1);
 	}
 
-//	if (WSAGetLastError() == 1460)
-//		std::cout << "ERROR: timeout" << std::endl;
 	if (fWait == std::future_status::ready || gWait == std::future_status::ready) {
 		
 		if (FisValid && !(strcmp(strFromF, "hard fail")))
-			ProtectedConsoleOutput(std::string("Result F :") + F, 1);
+			ProtectedConsoleOutput(std::string("Result F: ") + F, 1);
 		else if (FisValid && !(strcmp(strFromF, "soft fail"))) {
+			//implemented advanced version (corresponding computation is restarted after soft fail)
 			short i = 0;
 			if (!m_userCanceledCalculations)
 				for (i = 0; i < 5 && !strcmp(F, "soft fail") && !m_userCanceledCalculations; i++) {
@@ -259,13 +259,14 @@ void Server::ReceivingData(SOCKET &connectionF, SOCKET &connectionG, SOCKADDR_IN
 
 		}
 		else if (isFCalculationsDone && fWait == std::future_status::ready) {
-			ProtectedConsoleOutput(std::string("Result F :") + F, 1);
+			ProtectedConsoleOutput(std::string("Result F: ") + F, 1);
 			FisValid = false;
 		}
 
 		if (GisValid && !strcmp(strFromG, "hard fail"))
-			ProtectedConsoleOutput(std::string("Result G :") + strFromG, 1);
+			ProtectedConsoleOutput(std::string("Result G: ") + strFromG, 1);
 		else if (GisValid && !(strcmp(strFromG, "soft fail"))) {
+			//implemented advanced version (corresponding computation is restarted after soft fail)
 			short i = 0;
 			if (!m_userCanceledCalculations)
 				for (i = 0; i < 5 && !strcmp(G, "soft fail") && !m_userCanceledCalculations; i++) {
@@ -277,7 +278,7 @@ void Server::ReceivingData(SOCKET &connectionF, SOCKET &connectionG, SOCKADDR_IN
 				ProtectedConsoleOutput(std::string("Result G: soft fail") + std::string("; number of attempts = ") + std::to_string(i), 2);
 		}
 		else if (isGCalculationsDone && gWait == std::future_status::ready) {
-			ProtectedConsoleOutput(std::string("Result G :") + G, 1);
+			ProtectedConsoleOutput(std::string("Result G: ") + G, 1);
 			GisValid = false;
 		}
 
@@ -294,7 +295,6 @@ void Server::CloseServer()
 
 void Server::RunProcesses()
 {
-	//запуск процесов!
 	ZeroMemory(&si_1, sizeof(si_1));
 	ZeroMemory(&si_2, sizeof(si_2));
 	si_1.cb = sizeof(si_1);

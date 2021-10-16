@@ -27,7 +27,6 @@ namespace os::lab1::compfuncs {
     template<typename T>
     using case_attribs = pair<duration, optional<T>>;
 
-    //template<typename T> comp_result<T> gen_func(optional<pair<duration, T>> attribs) {
     template<typename T> comp_result<T> gen_func(optional<case_attribs<T>> attribs) {
 	if (attribs) {
 	    std::this_thread::sleep_for(std::get<duration>(attribs.value()));
@@ -64,8 +63,7 @@ namespace os::lab1::compfuncs {
         INLINE_CONST static case_type cases[] = {
         {.f_attrs = pair(3s, 3.), .g_attrs = pair(1s, 5.) },
         {.f_attrs = {}, .g_attrs = attr_type(3s, {}) },
-//       {.f_attrs = {}, .g_attrs = attr_type(3s, {}) },
-        };
+    };
     };
 
     template<> 
@@ -94,14 +92,11 @@ namespace os::lab1::compfuncs {
 
     template<op_group O> 
     typename op_group_traits<O>::result_type probe_f(int case_nr) {
-//        const os::lab1::compfuncs::op_group_probe_type_traits<int>::case_type element = op_group_probe_traits<O>::cases[case_nr];
-//        optional<case_attribs<typename op_group_traits<O>::value_type>> item = element.f_attrs;
 	    return gen_func<typename op_group_traits<O>::value_type>(op_group_probe_traits<O>::cases[case_nr].f_attrs);
     }
 
     template<op_group O> 
     typename op_group_traits<O>::result_type probe_g(int case_nr) {
- //       optional<case_attribs<typename op_group_traits<O>::value_type>> item = ;
 	    return gen_func<typename op_group_traits<O>::value_type>(op_group_probe_traits<O>::cases[case_nr].g_attrs);
     }
 }
