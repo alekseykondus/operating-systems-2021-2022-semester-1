@@ -1,0 +1,242 @@
+BEGIN: Round-Robin scheduling simulation (Quantum: 10)
+
+Process: 1 registered... (CPUTime = 50 IOBlocking = 7 CPUDone = 0 )
+Process: 1 Working : 1 Waiting : 0
+Process: 1 Working : 2 Waiting : 0
+Process: 1 Working : 3 Waiting : 0
+Process: 1 Working : 4 Waiting : 0
+Process: 1 Working : 5 Waiting : 0
+Process: 1 Working : 6 Waiting : 0
+Process: 1 Working : 7 Waiting : 0
+Process: 1I/O blocked... (CPUTime = 50 IOBlocking = 7 CPUDone = 7 )
+
+
+Process: 2 registered... (CPUTime = 40 IOBlocking = 5 CPUDone = 0 )
+Process: 2 Working : 1 Waiting : 7
+Process: 2 Working : 2 Waiting : 7
+Process: 2 Working : 3 Waiting : 7
+Process: 2 Working : 4 Waiting : 7
+Process: 2 Working : 5 Waiting : 7
+Process: 2I/O blocked... (CPUTime = 40 IOBlocking = 5 CPUDone = 5 )
+
+
+Process: 3 registered... (CPUTime = 30 IOBlocking = 0 CPUDone = 0 )
+Process: 3 Working : 1 Waiting : 12
+Process: 3 Working : 2 Waiting : 12
+Process: 3 Working : 3 Waiting : 12
+Process: 3 Working : 4 Waiting : 12
+Process: 3 Working : 5 Waiting : 12
+Process: 3 Working : 6 Waiting : 12
+Process: 3 Working : 7 Waiting : 12
+Process: 3 Working : 8 Waiting : 12
+Process: 3 Working : 9 Waiting : 12
+Process: 3 Working : 10 Waiting : 12
+
+Process: 4 registered... (CPUTime = 20 IOBlocking = 3 CPUDone = 0 )
+Process: 4 Working : 1 Waiting : 22
+Process: 4 Working : 2 Waiting : 22
+Process: 4 Working : 3 Waiting : 22
+Process: 4I/O blocked... (CPUTime = 20 IOBlocking = 3 CPUDone = 3 )
+
+
+Process: 1 registered... (CPUTime = 50 IOBlocking = 7 CPUDone = 7 )
+Process: 1 Working : 8 Waiting : 18
+Process: 1 Working : 9 Waiting : 18
+Process: 1 Working : 10 Waiting : 18
+Process: 1 Working : 11 Waiting : 18
+Process: 1 Working : 12 Waiting : 18
+Process: 1 Working : 13 Waiting : 18
+Process: 1 Working : 14 Waiting : 18
+Process: 1I/O blocked... (CPUTime = 50 IOBlocking = 7 CPUDone = 14 )
+
+
+Process: 2 registered... (CPUTime = 40 IOBlocking = 5 CPUDone = 5 )
+Process: 2 Working : 6 Waiting : 27
+Process: 2 Working : 7 Waiting : 27
+Process: 2 Working : 8 Waiting : 27
+Process: 2 Working : 9 Waiting : 27
+Process: 2 Working : 10 Waiting : 27
+Process: 2I/O blocked... (CPUTime = 40 IOBlocking = 5 CPUDone = 10 )
+
+
+Process: 3 registered... (CPUTime = 30 IOBlocking = 0 CPUDone = 10 )
+Process: 3 Working : 11 Waiting : 27
+Process: 3 Working : 12 Waiting : 27
+Process: 3 Working : 13 Waiting : 27
+Process: 3 Working : 14 Waiting : 27
+Process: 3 Working : 15 Waiting : 27
+Process: 3 Working : 16 Waiting : 27
+Process: 3 Working : 17 Waiting : 27
+Process: 3 Working : 18 Waiting : 27
+Process: 3 Working : 19 Waiting : 27
+Process: 3 Working : 20 Waiting : 27
+
+Process: 4 registered... (CPUTime = 20 IOBlocking = 3 CPUDone = 3 )
+Process: 4 Working : 4 Waiting : 44
+Process: 4 Working : 5 Waiting : 44
+Process: 4 Working : 6 Waiting : 44
+Process: 4I/O blocked... (CPUTime = 20 IOBlocking = 3 CPUDone = 6 )
+
+
+Process: 1 registered... (CPUTime = 50 IOBlocking = 7 CPUDone = 14 )
+Process: 1 Working : 15 Waiting : 36
+Process: 1 Working : 16 Waiting : 36
+Process: 1 Working : 17 Waiting : 36
+Process: 1 Working : 18 Waiting : 36
+Process: 1 Working : 19 Waiting : 36
+Process: 1 Working : 20 Waiting : 36
+Process: 1 Working : 21 Waiting : 36
+Process: 1I/O blocked... (CPUTime = 50 IOBlocking = 7 CPUDone = 21 )
+
+
+Process: 2 registered... (CPUTime = 40 IOBlocking = 5 CPUDone = 10 )
+Process: 2 Working : 11 Waiting : 47
+Process: 2 Working : 12 Waiting : 47
+Process: 2 Working : 13 Waiting : 47
+Process: 2 Working : 14 Waiting : 47
+Process: 2 Working : 15 Waiting : 47
+Process: 2I/O blocked... (CPUTime = 40 IOBlocking = 5 CPUDone = 15 )
+
+
+Process: 3 registered... (CPUTime = 30 IOBlocking = 0 CPUDone = 20 )
+Process: 3 Working : 21 Waiting : 42
+Process: 3 Working : 22 Waiting : 42
+Process: 3 Working : 23 Waiting : 42
+Process: 3 Working : 24 Waiting : 42
+Process: 3 Working : 25 Waiting : 42
+Process: 3 Working : 26 Waiting : 42
+Process: 3 Working : 27 Waiting : 42
+Process: 3 Working : 28 Waiting : 42
+Process: 3 Working : 29 Waiting : 42
+Process: 3 Working : 30 Waiting : 42
+Process: 3 done... (CPUTime = 30 IOBlocking = 0 CPUDone = 30 )
+
+
+Process: 4 registered... (CPUTime = 20 IOBlocking = 3 CPUDone = 6 )
+Process: 4 Working : 7 Waiting : 66
+Process: 4 Working : 8 Waiting : 66
+Process: 4 Working : 9 Waiting : 66
+Process: 4I/O blocked... (CPUTime = 20 IOBlocking = 3 CPUDone = 9 )
+
+
+Process: 1 registered... (CPUTime = 50 IOBlocking = 7 CPUDone = 21 )
+Process: 1 Working : 22 Waiting : 54
+Process: 1 Working : 23 Waiting : 54
+Process: 1 Working : 24 Waiting : 54
+Process: 1 Working : 25 Waiting : 54
+Process: 1 Working : 26 Waiting : 54
+Process: 1 Working : 27 Waiting : 54
+Process: 1 Working : 28 Waiting : 54
+Process: 1I/O blocked... (CPUTime = 50 IOBlocking = 7 CPUDone = 28 )
+
+
+Process: 2 registered... (CPUTime = 40 IOBlocking = 5 CPUDone = 15 )
+Process: 2 Working : 16 Waiting : 67
+Process: 2 Working : 17 Waiting : 67
+Process: 2 Working : 18 Waiting : 67
+Process: 2 Working : 19 Waiting : 67
+Process: 2 Working : 20 Waiting : 67
+Process: 2I/O blocked... (CPUTime = 40 IOBlocking = 5 CPUDone = 20 )
+
+
+Process: 4 registered... (CPUTime = 20 IOBlocking = 3 CPUDone = 9 )
+Process: 4 Working : 10 Waiting : 78
+Process: 4 Working : 11 Waiting : 78
+Process: 4 Working : 12 Waiting : 78
+Process: 4I/O blocked... (CPUTime = 20 IOBlocking = 3 CPUDone = 12 )
+
+
+Process: 1 registered... (CPUTime = 50 IOBlocking = 7 CPUDone = 28 )
+Process: 1 Working : 29 Waiting : 62
+Process: 1 Working : 30 Waiting : 62
+Process: 1 Working : 31 Waiting : 62
+Process: 1 Working : 32 Waiting : 62
+Process: 1 Working : 33 Waiting : 62
+Process: 1 Working : 34 Waiting : 62
+Process: 1 Working : 35 Waiting : 62
+Process: 1I/O blocked... (CPUTime = 50 IOBlocking = 7 CPUDone = 35 )
+
+
+Process: 2 registered... (CPUTime = 40 IOBlocking = 5 CPUDone = 20 )
+Process: 2 Working : 21 Waiting : 77
+Process: 2 Working : 22 Waiting : 77
+Process: 2 Working : 23 Waiting : 77
+Process: 2 Working : 24 Waiting : 77
+Process: 2 Working : 25 Waiting : 77
+Process: 2I/O blocked... (CPUTime = 40 IOBlocking = 5 CPUDone = 25 )
+
+
+Process: 4 registered... (CPUTime = 20 IOBlocking = 3 CPUDone = 12 )
+Process: 4 Working : 13 Waiting : 90
+Process: 4 Working : 14 Waiting : 90
+Process: 4 Working : 15 Waiting : 90
+Process: 4I/O blocked... (CPUTime = 20 IOBlocking = 3 CPUDone = 15 )
+
+
+Process: 1 registered... (CPUTime = 50 IOBlocking = 7 CPUDone = 35 )
+Process: 1 Working : 36 Waiting : 70
+Process: 1 Working : 37 Waiting : 70
+Process: 1 Working : 38 Waiting : 70
+Process: 1 Working : 39 Waiting : 70
+Process: 1 Working : 40 Waiting : 70
+Process: 1 Working : 41 Waiting : 70
+Process: 1 Working : 42 Waiting : 70
+Process: 1I/O blocked... (CPUTime = 50 IOBlocking = 7 CPUDone = 42 )
+
+
+Process: 2 registered... (CPUTime = 40 IOBlocking = 5 CPUDone = 25 )
+Process: 2 Working : 26 Waiting : 87
+Process: 2 Working : 27 Waiting : 87
+Process: 2 Working : 28 Waiting : 87
+Process: 2 Working : 29 Waiting : 87
+Process: 2 Working : 30 Waiting : 87
+Process: 2I/O blocked... (CPUTime = 40 IOBlocking = 5 CPUDone = 30 )
+
+
+Process: 4 registered... (CPUTime = 20 IOBlocking = 3 CPUDone = 15 )
+Process: 4 Working : 16 Waiting : 102
+Process: 4 Working : 17 Waiting : 102
+Process: 4 Working : 18 Waiting : 102
+Process: 4I/O blocked... (CPUTime = 20 IOBlocking = 3 CPUDone = 18 )
+
+
+Process: 1 registered... (CPUTime = 50 IOBlocking = 7 CPUDone = 42 )
+Process: 1 Working : 43 Waiting : 78
+Process: 1 Working : 44 Waiting : 78
+Process: 1 Working : 45 Waiting : 78
+Process: 1 Working : 46 Waiting : 78
+Process: 1 Working : 47 Waiting : 78
+Process: 1 Working : 48 Waiting : 78
+Process: 1 Working : 49 Waiting : 78
+Process: 1I/O blocked... (CPUTime = 50 IOBlocking = 7 CPUDone = 49 )
+
+
+Process: 2 registered... (CPUTime = 40 IOBlocking = 5 CPUDone = 30 )
+Process: 2 Working : 31 Waiting : 97
+Process: 2 Working : 32 Waiting : 97
+Process: 2 Working : 33 Waiting : 97
+Process: 2 Working : 34 Waiting : 97
+Process: 2 Working : 35 Waiting : 97
+Process: 2I/O blocked... (CPUTime = 40 IOBlocking = 5 CPUDone = 35 )
+
+
+Process: 4 registered... (CPUTime = 20 IOBlocking = 3 CPUDone = 18 )
+Process: 4 Working : 19 Waiting : 114
+Process: 4 Working : 20 Waiting : 114
+Process: 4 done... (CPUTime = 20 IOBlocking = 3 CPUDone = 20 )
+
+
+Process: 1 registered... (CPUTime = 50 IOBlocking = 7 CPUDone = 49 )
+Process: 1 Working : 50 Waiting : 85
+Process: 1 done... (CPUTime = 50 IOBlocking = 7 CPUDone = 50 )
+
+
+Process: 2 registered... (CPUTime = 40 IOBlocking = 5 CPUDone = 35 )
+Process: 2 Working : 36 Waiting : 100
+Process: 2 Working : 37 Waiting : 100
+Process: 2 Working : 38 Waiting : 100
+Process: 2 Working : 39 Waiting : 100
+Process: 2 Working : 40 Waiting : 100
+Process: 2 done... (CPUTime = 40 IOBlocking = 5 CPUDone = 40 )
+
+END: Round-Robin scheduling simulation
