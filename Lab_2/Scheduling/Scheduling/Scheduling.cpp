@@ -3,50 +3,37 @@
 Scheduling::Scheduling(unsigned int numberOfProcesses, unsigned int runtime, unsigned int quantum) 
     : m_NumberOfProcesses(numberOfProcesses), m_Runtime(runtime), m_Quantum(quantum)
 {
-    m_ResultVector.resize(numberOfProcesses);
+    m_ResultVector.resize(numberOfProcesses - 1);
     CreateProcesses();
 }
 
 void Scheduling::CreateProcesses()
 {
-    std::shared_ptr<Process> head(std::make_shared<Process>(1, 50, 7));
-    std::shared_ptr<Process> item = head, previousItem;
-
-    item->SetNext(std::make_shared<Process>(2, 40, 5));
-    previousItem = item;
-    item = item->GetNext();
-    item->SetPrevious(previousItem);
-
-    item->SetNext(std::make_shared<Process>(3, 30, 0));
-    previousItem = item;
-    item = item->GetNext();
-    item->SetPrevious(previousItem);
-
-    item->SetNext(std::make_shared<Process>(4, 20, 3));
-    previousItem = item;
-    item = item->GetNext();
-    item->SetPrevious(previousItem);
-
-//    item->SetNext(head);
-//    head->SetPrevious(item);
-
-    m_Head = head;
+    m_ProcessesVector.push_back(Process(1, 50, 7));
+    m_ProcessesVector.push_back(Process(2, 40, 5));
+    m_ProcessesVector.push_back(Process(3, 30, 0));
+    m_ProcessesVector.push_back(Process(4, 20, 3));
 }
 
 void Scheduling::Run()
 {
-   m_ResultVector = m_Algorithm.RoundRobin(m_Head, m_ResultVector, m_Quantum, m_Runtime, m_NumberOfProcesses, m_StreamResult);
+    m_Algorithm.RoundRobin(m_ProcessesVector, m_ResultVector, m_Quantum, m_Runtime, m_StreamResult);
 }
 
 void Scheduling::PrintResults()
 {
-    std::cout << m_StreamResult.str();
+    //m_StreamResult << m_StreamResult.str();
     std::ofstream outputToFile;
     outputToFile.open("Summary-Processes.txt");
     outputToFile << m_StreamResult.str();
     outputToFile.close(); 
 
-    OutputByTable(m_ResultVector);
+    m_StreamResult.clear();
+    m_StreamResult.str("");
+    OutputOverallResultsByTable(m_ResultVector);
+    outputToFile.open("Summary-Results.txt");
+    outputToFile << m_StreamResult.str();
+    outputToFile.close();
 }
 
 void Scheduling::CenterAlign(const std::string& s, size_t width_field)
@@ -63,41 +50,38 @@ void Scheduling::CenterAlign(const std::string& s, size_t width_field)
     }
     copy(v1.begin(), v1.end(), v.begin() + step);
     for (auto x : v) {
-        std::cout << x;
+        m_StreamResult << x;
     }
 }
 
-void Scheduling::OutputByTable(std::vector<std::shared_ptr<Process>> resultsVector)
+void Scheduling::OutputOverallResultsByTable(std::vector<Process> resultsVector)
 {
-
-    std::cout << " -------------------------------------------------------------------------------------------" << std::endl;
-    std::cout << " | ";
+    m_StreamResult << " -------------------------------------------------------------------------------------------" << std::endl;
+    m_StreamResult << " | ";
     CenterAlign("Process #", 15);
-    std::cout << " | ";
+    m_StreamResult << " | ";
     CenterAlign("CPU Time", 15);
-    std::cout << " | ";
+    m_StreamResult << " | ";
     CenterAlign("IO Blocking", 15);
-    std::cout << " | ";
+    m_StreamResult << " | ";
     CenterAlign("CPU Completed", 15);
-    std::cout << " | ";
+    m_StreamResult << " | ";
     CenterAlign("CPU Blocked", 15);
-    std::cout << " | ";
+    m_StreamResult << " | ";
 
 
-    std::cout << std::endl << " -------------------------------------------------------------------------------------------" << std::endl;
+    m_StreamResult << std::endl << " -------------------------------------------------------------------------------------------" << std::endl;
     for (auto currentItem : resultsVector) {
-        if (currentItem) {
-            std::cout << " | ";
-            CenterAlign(std::to_string(currentItem->GetId()), 15);
-            std::cout << " | ";
-            CenterAlign(std::to_string(currentItem->GetCPUTime()), 15);
-            std::cout << " | ";
-            CenterAlign(std::to_string(currentItem->GetIOBlocking()), 15);
-            std::cout << " | ";
-            CenterAlign(std::to_string(currentItem->GetCPUDone()), 15);
-            std::cout << " | ";
-            CenterAlign(std::to_string(currentItem->GetNumBlocked()), 15);
-            std::cout << " | " << std::endl << " -------------------------------------------------------------------------------------------" << std::endl;
-        }
+        m_StreamResult << " | ";
+        CenterAlign(std::to_string(currentItem.GetId()), 15);
+        m_StreamResult << " | ";
+        CenterAlign(std::to_string(currentItem.GetCPUTime()), 15);
+        m_StreamResult << " | ";
+        CenterAlign(std::to_string(currentItem.GetIOBlocking()), 15);
+        m_StreamResult << " | ";
+        CenterAlign(std::to_string(currentItem.GetCPUDone()), 15);
+        m_StreamResult << " | ";
+        CenterAlign(std::to_string(currentItem.GetNumBlocked()), 15);
+        m_StreamResult << " | " << std::endl << " -------------------------------------------------------------------------------------------" << std::endl;
     }
 }

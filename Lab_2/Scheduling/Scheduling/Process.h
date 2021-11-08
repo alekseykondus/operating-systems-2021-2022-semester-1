@@ -11,7 +11,7 @@ public:
         Finish,
     };
 
-    Process(unsigned int id, unsigned int cpuTime, unsigned int ioBlocking = 0);
+    Process(unsigned int id = 0, unsigned int cpuTime = 0, unsigned int ioBlocking = 0);
     void IncreaseCPUWorking(unsigned int quantity);
     void SetWaiting(unsigned int quantity);
     unsigned int GetId();
@@ -20,11 +20,6 @@ public:
     unsigned int GetCPUDone();
     unsigned int GetWaiting();
     unsigned int GetNumBlocked();
-    std::shared_ptr<Process> GetNext();
-    void SetNext(std::shared_ptr<Process> next);
-    std::shared_ptr<Process> GetPrevious();
-    void SetPrevious(std::shared_ptr<Process> previous);
-
     void SetCurrentExecutionMode(ExecutionMode executionMode);
     ExecutionMode GetCurrentExecutionMode();
 
@@ -36,8 +31,5 @@ private:
     unsigned int m_NumBlocked;         /* Process blocking interval */
     unsigned int m_Waiting;            /* Waiting time, for round-robin scheduling */
     ExecutionMode m_CurrentExecutionMode;
-
-    std::shared_ptr<Process> m_Next;
-    std::shared_ptr<Process> m_Previous;
 };
 

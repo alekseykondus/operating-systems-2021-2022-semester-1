@@ -44,26 +44,6 @@ unsigned int Process::GetNumBlocked()
     return m_NumBlocked;
 }
 
-std::shared_ptr<Process> Process::GetNext()
-{
-    return m_Next;
-}
-
-void Process::SetNext(std::shared_ptr<Process> next)
-{
-    m_Next = next;
-}
-
-std::shared_ptr<Process> Process::GetPrevious()
-{
-    return m_Previous;
-}
-
-void Process::SetPrevious(std::shared_ptr<Process> previous)
-{
-    m_Previous = previous;
-}
-
 void Process::SetCurrentExecutionMode(ExecutionMode executionMode)
 {
     m_CurrentExecutionMode = executionMode;
