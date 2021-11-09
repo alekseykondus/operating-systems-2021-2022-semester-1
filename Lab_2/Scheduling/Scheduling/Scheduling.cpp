@@ -13,7 +13,7 @@ void Scheduling::CreateProcesses()
     std::mt19937 mersenne(rd()); // инициализируем Вихрь Мерсенна случайным стартовым числом 
 
     for (int i = 0; i < m_NumberOfProcesses; i++) {
-        unsigned int CPUTime = (mersenne() + m_Average - m_Deviation) % (m_Average + m_Deviation) + 1;
+        unsigned int CPUTime = mersenne() % (m_Average - m_Deviation) + 2 * m_Deviation;
         unsigned int IOBlocking = mersenne() % 10;
         Process p(i + 1, CPUTime, IOBlocking);
         m_ProcessesVector.push_back(p);
