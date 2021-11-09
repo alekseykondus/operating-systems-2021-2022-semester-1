@@ -1,18 +1,34 @@
 ﻿#include "Scheduling.h"
 
-Scheduling::Scheduling(unsigned int numberOfProcesses, unsigned int runtime, unsigned int quantum) 
-    : m_NumberOfProcesses(numberOfProcesses), m_Runtime(runtime), m_Quantum(quantum)
+Scheduling::Scheduling(unsigned int numberOfProcesses, unsigned int runtime, unsigned int quantum, unsigned int average, unsigned int deviation)
+    : m_NumberOfProcesses(numberOfProcesses), m_Runtime(runtime), m_Quantum(quantum), m_Average(average), m_Deviation(deviation)
 {
-    m_ResultVector.resize(numberOfProcesses - 1);
+    m_ResultVector.resize(numberOfProcesses);
     CreateProcesses();
 }
 
 void Scheduling::CreateProcesses()
 {
+    std::random_device rd;
+    std::mt19937 mersenne(rd()); // инициализируем Вихрь Мерсенна случайным стартовым числом 
+
+    for (int i = 0; i < m_NumberOfProcesses; i++) {
+        unsigned int CPUTime = (mersenne() + m_Average - m_Deviation) % (m_Average + m_Deviation) + 1;
+        unsigned int IOBlocking = mersenne() % 10;
+        Process p(i + 1, CPUTime, IOBlocking);
+        m_ProcessesVector.push_back(p);
+    }
+    /*
     m_ProcessesVector.push_back(Process(1, 50, 7));
     m_ProcessesVector.push_back(Process(2, 40, 5));
     m_ProcessesVector.push_back(Process(3, 30, 0));
     m_ProcessesVector.push_back(Process(4, 20, 3));
+   
+    m_ProcessesVector.push_back(Process(1, 30, 7));
+    m_ProcessesVector.push_back(Process(2, 40, 5));
+    m_ProcessesVector.push_back(Process(3, 30, 0));
+    m_ProcessesVector.push_back(Process(4, 5, 0));
+     */
 }
 
 void Scheduling::Run()

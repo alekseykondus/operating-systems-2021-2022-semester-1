@@ -1,4 +1,5 @@
 #include "SchedulingAlgorithm.h"
+#include <iostream>
 
 std::vector<Process> SchedulingAlgorithm::RoundRobin(std::vector<Process> processesVector, std::vector<Process>& result, unsigned int quantum, unsigned int runTime, std::stringstream& streamResult)
 {
@@ -38,11 +39,15 @@ std::vector<Process> SchedulingAlgorithm::RoundRobin(std::vector<Process> proces
                 auto prevCurrentItem = currentItem - 1;
                 processesVector.erase(currentItem);
                 currentItem = prevCurrentItem;
+                currentItem->GetId();
+            }
+            else if (processesVector.size() == 1) {
+                processesVector.erase(currentItem);
             }
             else {
-                auto prevCurrentItem = processesVector.end() - 1;
                 processesVector.erase(currentItem);
-                currentItem = prevCurrentItem;
+                currentItem = processesVector.end()-1;
+                currentItem->GetId();
             }
         }
         else {
@@ -51,7 +56,7 @@ std::vector<Process> SchedulingAlgorithm::RoundRobin(std::vector<Process> proces
         }
         if (processesVector.empty())
             break;
-        else if (processesVector.size() == 1 || currentItem + 1 == processesVector.end())
+        else if (processesVector.size() == 1 || (currentItem + 1 == processesVector.end()))
             currentItem = processesVector.begin();
         else
             currentItem++;

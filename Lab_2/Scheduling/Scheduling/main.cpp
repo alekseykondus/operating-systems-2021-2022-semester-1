@@ -4,7 +4,7 @@
 /* Scheduling Simulation*/
 int main(void) {
 
-    Scheduling scheduling(5, 1000, 10);
+    Scheduling scheduling(100, 10000, 10, 50, 23);
     std::cout << "Working..." << std::endl;
     scheduling.Run();
     scheduling.PrintResults();
