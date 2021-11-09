@@ -44,8 +44,17 @@ void Scheduling::PrintResults()
     outputToFile << m_StreamResult.str();
     outputToFile.close(); 
 
-    m_StreamResult.clear();
     m_StreamResult.str("");
+
+    int amountOfWaitingTime = 0;
+    for (auto element : m_ResultVector)
+        amountOfWaitingTime += element.GetWaiting();
+
+    m_StreamResult << "Scheduling Name: Round Robin" << std::endl;
+    m_StreamResult << "Average: " << m_Average << std::endl;
+    m_StreamResult << "Standard Deviation: " << m_Deviation << std::endl;
+    m_StreamResult << "Average waiting time: " << amountOfWaitingTime / m_NumberOfProcesses << std::endl;
+
     OutputOverallResultsByTable(m_ResultVector);
     outputToFile.open("Summary-Results.txt");
     outputToFile << m_StreamResult.str();

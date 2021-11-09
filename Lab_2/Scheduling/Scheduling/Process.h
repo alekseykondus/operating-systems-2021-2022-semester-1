@@ -28,7 +28,7 @@ private:
     unsigned int m_CPUTime;            /* CPU Time */
     unsigned int m_CPUDone;            /* Working time, for round-robin scheduling */
     unsigned int m_IOBlocking;         /* Process blocking interval */
-    unsigned int m_NumBlocked;         /* Process blocking interval */
+    unsigned int m_NumBlocked;         /* Number of process locks */
     unsigned int m_Waiting;            /* Waiting time, for round-robin scheduling */
     ExecutionMode m_CurrentExecutionMode;
 };

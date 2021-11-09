@@ -1,12 +1,10 @@
 #include "SchedulingAlgorithm.h"
-#include <iostream>
 
 std::vector<Process> SchedulingAlgorithm::RoundRobin(std::vector<Process> processesVector, std::vector<Process>& result, unsigned int quantum, unsigned int runTime, std::stringstream& streamResult)
 {
     int countQuantum = 0;
-
     streamResult << "BEGIN: Round-Robin scheduling simulation (Quantum: " << quantum << ")" << std::endl;
-    //    while (countQuantum < runTime && (processesVector.size() != 1 || currentItem->GetCurrentExecutionMode() != Process::ExecutionMode::Finish)) {
+
     for (auto currentItem = processesVector.begin(); countQuantum < runTime; ) {
 
         streamResult << std::endl << "Process: " << currentItem->GetId() << " registered... (" <<
@@ -52,7 +50,6 @@ std::vector<Process> SchedulingAlgorithm::RoundRobin(std::vector<Process> proces
         }
         else {
             currentItem->SetCurrentExecutionMode(Process::ExecutionMode::Ready);
-            //currentItem = currentItem->GetNext();
         }
         if (processesVector.empty())
             break;

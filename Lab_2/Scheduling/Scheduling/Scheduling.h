@@ -20,7 +20,6 @@ private:
 	unsigned int m_Quantum;
 	unsigned int m_Average;
 	unsigned int m_Deviation;
-	std::shared_ptr<Process> m_Head;
 	SchedulingAlgorithm m_Algorithm;
 	std::stringstream m_StreamResult;
 	std::vector<Process> m_ProcessesVector;
